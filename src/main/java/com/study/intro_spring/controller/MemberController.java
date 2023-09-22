@@ -5,7 +5,9 @@ import com.study.intro_spring.service.MemberService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -19,22 +21,23 @@ public class MemberController {
     }
 
     @GetMapping("/members/new")
-    public String crateForm(){
+    public String createForm(){
         return "members/createMemberForm";
     }
 
     @PostMapping("/members/new")
-    public  String create(MemberForm form){
+    public String create(Member form){
         Member member = new Member();
         member.setName(form.getName());
 
-        memberService.join(member);
-        return "redirect:/";
+        memberService.createMember(member);
+
+        return "redirect:/members";
     }
 
-    @GetMapping(value = "/members")
-    public String list(Model model) {
-        List<Member> members = memberService.findMembers();
+    @GetMapping("/members")
+    public String list(Model model){
+        List<Member> members = memberService.findMember();
         model.addAttribute("members", members);
         return "members/memberList";
     }

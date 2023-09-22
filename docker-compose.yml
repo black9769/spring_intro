@@ -1,0 +1,33 @@
+version: "3"
+services:
+  db:
+    image: mysql
+    container_name: test_db
+    environment:
+      - MYSQL_DATABASE=test
+      - MYSQL_ROOT_HOST=%
+      - MYSQL_ROOT_PASSWORD=1234
+    ports:
+      - "3306:3306"
+    networks:
+      - test01
+  redis:
+    image: redis
+    networks:
+      - test01
+  spring-app:
+    container_name: test_app
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/test?useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=1234
+    networks:
+      - test01
+
+networks:
+  test01:
